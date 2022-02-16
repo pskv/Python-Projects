@@ -1,4 +1,4 @@
-from openpyxl import load_workbook, workbook
+from openpyxl import load_workbook
 
 wb = load_workbook('salaries.xlsx')
 ws = wb.active
@@ -30,7 +30,7 @@ for i in range(2, 10):
 # print(list(map(lambda x: sorted(x), data)))
 # print(list(map(sorted, data)))
 # print(list(map(lambda x: sorted(x)[3], data)))
-print(dict_cities[list(map(lambda x: sorted(x)[3], data)).index(max(map(lambda x: sorted(x)[3], data)))], end = ' ')
+print(dict_cities[list(map(lambda x: sorted(x)[3], data)).index(max(map(lambda x: sorted(x)[3], data)))], end=' ')
 
 
 # print(data)
