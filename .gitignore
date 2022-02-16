@@ -1,5 +1,4 @@
 # Default ignored files
 Checkio/.idea/**
-Checkio/.idea/Checkio.iml
 Checkio/venv/**
 Excel/.idea
