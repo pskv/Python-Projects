@@ -1,3 +1,29 @@
+def convert_interval_into_range(in_text):
+    res = str()
+    for i in range(len(in_text)):
+        # print(in_text[i])
+        # print(' '.join('abc'))
+        if in_text[i] == '-' and i not in (0,len(in_text)-1):
+            # print(''.join(list(map(chr ,(range(ord(in_text[i-1])+1, ord(in_text[i+1])))))))
+            res +=''.join(list(map(chr ,(range(ord(in_text[i-1])+1, ord(in_text[i+1]))))))
+        else:
+            res += str(in_text[i])
+    return res
+
+def find_star(pattern):
+    curr_pos = 0
+    in_sq_br = False
+    for symb in pattern:
+        if in_sq_br:
+            if symb == "]":
+                in_sq_br = False
+        elif symb == "[":
+            in_sq_br = True
+        elif symb == "*":
+            return curr_pos
+        curr_pos += 1
+    return -1
+
 def compare_part(text, pat):
     pat_pos = 0
     for i in range(len(text)):
@@ -5,10 +31,14 @@ def compare_part(text, pat):
             return -1
         if pat[pat_pos] == '[' and pat[pat_pos:pat_pos+3] != '[!]':
             if pat[pat_pos + 1] == '!':
-                if text[i] in pat[pat_pos + 2:pat.index(']', pat_pos + 2)]:
+                if text[i] in convert_interval_into_range(pat[pat_pos + 2:pat.index(']', pat_pos + 2)]):
                     return -1
             else:
-                if text[i] not in pat[pat_pos + 1:pat.index(']', pat_pos + 1)]:
+                # print(text[i])
+                # print(pat[pat_pos + 1:pat.index(']', pat_pos + 2)])
+                if pat.find(']', pat_pos + 2) == -1:
+                    return -1
+                elif text[i] not in convert_interval_into_range(pat[pat_pos + 1:pat.index(']', pat_pos + 2)]):
                     return -1
             pat_pos = pat.index(']', pat_pos + 2)
         elif pat[pat_pos] == '*' and pat_pos == len(pat)-1:
@@ -26,9 +56,10 @@ def unix_match(filename: str, pattern: str) -> bool:
     name_pos = 0
     pat_pos = 0
     prev_star_pos = -1
-    # is_equal = set()
     while True:
-        star_pos = pattern.find('*', pat_pos)
+        if pat_pos == len(pattern):
+            return True
+        star_pos = find_star(pattern[pat_pos:]) + pat_pos
         if prev_star_pos == -1 and star_pos == -1:
             f_res = compare_part(filename, pattern)
             if f_res == -1:
@@ -69,7 +100,11 @@ if __name__ == '__main__':
     print("Example:")
     # print(unix_match('2211name[.txt', '22*1*1[123na]ame[!].t?t'))
     # print(unix_match('1name.txt', '1*[123na]me*t'))
-    print(unix_match("[!]check.txt", "[!]check.txt"))
+    # print(find_star("[?*][*]"))
+    # print(unix_match("nametxt", "name[]txt"))
+    # print(unix_match("[?*]","[[][?][*][]]"))  #  escaping metacharacters
+    print(unix_match("Feb 2018","[A-Z][a-z][a-zA-Z] [2-3][0-4][1-1][5-9]"))
+    # print(convert_interval_into_range("AZa-z1-9"))
 
     # These "asserts" are used for self-checking and not for an auto-testing
     # assert unix_match('somefile.txt', 'somefile.txt') == True
