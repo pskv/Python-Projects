@@ -7,5 +7,7 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="1" />
+    <orderEntry type="module" module-name="Arcanoid" />
+    <orderEntry type="module" module-name="WebServer" />
   </component>
 </module>
