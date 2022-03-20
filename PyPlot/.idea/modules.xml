@@ -5,6 +5,7 @@
       <module fileurl="file://$PROJECT_DIR$/../../1/.idea/1.iml" filepath="$PROJECT_DIR$/../../1/.idea/1.iml" />
       <module fileurl="file://$PROJECT_DIR$/../../Arcanoid/.idea/Arcanoid.iml" filepath="$PROJECT_DIR$/../../Arcanoid/.idea/Arcanoid.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/PyPlot.iml" filepath="$PROJECT_DIR$/.idea/PyPlot.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../Small_tasks_for_practice/.idea/Small_tasks_for_practice.iml" filepath="$PROJECT_DIR$/../Small_tasks_for_practice/.idea/Small_tasks_for_practice.iml" />
       <module fileurl="file://$PROJECT_DIR$/../WebServer/.idea/WebServer.iml" filepath="$PROJECT_DIR$/../WebServer/.idea/WebServer.iml" />
     </modules>
   </component>

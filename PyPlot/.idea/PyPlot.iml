@@ -9,5 +9,6 @@
     <orderEntry type="module" module-name="1" />
     <orderEntry type="module" module-name="Arcanoid" />
     <orderEntry type="module" module-name="WebServer" />
+    <orderEntry type="module" module-name="Small_tasks_for_practice" />
   </component>
 </module>
