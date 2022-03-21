@@ -43,36 +43,47 @@ def jefferson_encryption(text, discs, step, reverse=False):
         step *= -1
     return ''.join([discs[i % len(discs)][(discs[i % len(discs)].index(l[i])+step) % len(discs[0])] for i in range(len(l))])
 
+
+def kidds_encryption(text, reverse=False):
+    cypher = {'e': '8', 't': ';', 'h': '4', 'o': '‡', 's': ')', 'n': '*', 'a': '5', 'i': '6', 'r': '(', 'f': '1',
+              'd': '†', 'l': '0', 'm': '9', 'b': '2', 'y': ':', 'g': '3', 'u': '?', 'v': '¶', 'c': '-', 'p': '.'}
+    if reverse:
+        rev_cypher = dict([(cypher[i], i) for i in cypher])
+        return text.translate(text.lower().maketrans(rev_cypher))
+    for i in set(text.lower()):
+        if i not in cypher:
+            cypher[i] = None
+    return text.lower().translate(str.maketrans(cypher))
+
+# print(kidds_encryption('ethosnairfdlmbyguvcp'))
+print(kidds_encryption('XxL ,L, LxX'))
+print(kidds_encryption('000', True))
+
+# dict = {"a": "123", "b": "456", "c": None}
+# string = "abc"
+# print(string.translate(string.maketrans(dict)))
+
 # bruteforce('СТВМФКМХОСРОВФЖОВФКМЖКСВЛФРП', 'АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ')
-
-
 # source_text = 'ТЛБЛДУЭППТКЛФЧУВНУПБКЗИХТЛТТЫХНЛОИНУВЖММИНПФНПШОКЧЛЕРНТФНАХЖИДМЯКЛТУБЖИУЕЖЕАХЛГЩЕЕЪУВНГАХИЯШПЙАОЦЦПВТЛБФТТИИНДИДНЧЮОНЯОФВТЕАТФУШБЛРЮЮЧЖДРУУШГЕХУРПЧЕУВАЭУОЙБДБНОЛСКЦБСАОЦЦПВИШЮТППЦЧНЖОИНШВРЗЕЗКЗСБЮНЙРКПСЪЖФФШНЦЗРСЭШЦПЖСЙНГЭФФВЫМЖИЛРОЩСЗЮЙФШФДЖОИЗТРМООЙБНФГОЩЧФЖООКОФВЙСЭФЖУЬХИСЦЖГИЪЖДШПРМЖПУПГЦНВКБНРЕКИБШМЦХЙИАМФЛУЬЙИСЗРТЕС'
 # bruteforce(source_text, 'АБВГДЕЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ', 6)
-
 # 8610
 # 31245
 # 71283
 # 86610
-
 # print(jarriquez_encryption('У СУДЬИ ЖАРРИКЕСА ПРОНИЦАТЕЛЬНЫЙ УМ', 423, 'АБВГДЕЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ', reverse=False))
 # print(jarriquez_encryption('ЧУЦИЮЛКВУФКНЙУГУТССКЩДФИПЮРЯЛЦР', 423, 'АБВГДЕЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ', reverse=True))
 # print(jarriquez_encryption('UUNEFWKXKVUEECMDVLPRUQQYCYTIHWUKPZ',26101986, reverse=True))
 # print('0'*2)
 # print('АЛМАЗ' in '123АЛМАЗЗ')
-
-
 # print(disc_generator('ABCDEFGHIJKLMNOPQRSTUVWXYZ'))
 
 
-clear_alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
-n = 6
-text = 'Some encripted text'
-
-random.seed(42)
-discs = list()
-for i in range(n):
-    discs.append(disc_generator(clear_alphabet))
-
-print(jefferson_encryption(text, discs, 4, reverse=False))
-
-print(jefferson_encryption('NUXHUEVGQBIJJZNVI', discs, 4, reverse=True))
+# clear_alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+# n = 6
+# text = 'Some encripted text'
+# random.seed(42)
+# discs = list()
+# for i in range(n):
+#     discs.append(disc_generator(clear_alphabet))
+# print(jefferson_encryption(text, discs, 4, reverse=False))
+# print(jefferson_encryption('NUXHUEVGQBIJJZNVI', discs, 4, reverse=True))
