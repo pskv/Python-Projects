@@ -1,10 +1,12 @@
+
 import telebot
 from telebot import types
 from datetime import date, timedelta
 
-
+with open('telebot_token.txt') as f:
+    bot_token = f.read()
 # Создаем экземпляр бота
-bot = telebot.TeleBot('5351083383:AAEBXpxnEJO8-aACeNdndxlaVhz0xDxbxCg')
+bot = telebot.TeleBot(bot_token)
 
 
 map_dict = {}
@@ -46,12 +48,10 @@ def handle_text(message):
 def callback_worker(call):
     if call.data == "Upload": #call.data это callback_data, которую мы указали при объявлении кнопки
         bot.send_message(call.message.chat.id, 'Давай её сюда');
-        print("Upload")
         bot.register_next_step_handler(call.message, Upload_map);  # следующий шаг – функция Upload_map
     elif call.data == "Find":
         bot.send_message(call.message.chat.id, 'Ща найду');
         bot.send_message(call.message.chat.id, 'А, ой. Пока не могу');
-        print('Find')
 
 def Upload_map(message): #получаем карту
     try:
@@ -63,6 +63,10 @@ def Upload_map(message): #получаем карту
             file_name = message.photo[len(message.photo) - 1].file_id;
             file_info = bot.get_file(file_name)
             file_name += '.jpg'
+        else:
+            bot.reply_to(message, 'Не похоже на карту. Давай по новой.')
+            bot.register_next_step_handler(message, Upload_map);
+            return
 
         chat_id = message.chat.id
         map = Map(file_name)
@@ -81,10 +85,15 @@ def Upload_map(message): #получаем карту
         bot.send_message(message.from_user.id, 'Теперь нужны координаты (приложи геолокацию)')
         bot.register_next_step_handler(message, Get_location);  # следующий шаг – функция Get_location
     except Exception as e:
-        bot.reply_to(message, 'Не похоже на карту. Придётся начинать сначала')
+        bot.reply_to(message, 'Что-то пошло не так. Придётся начинать сначала')
 
 def Get_location(message): #получаем координаты
     try:
+        if message.content_type != 'location':
+            bot.reply_to(message, 'Не похоже на геолокацию. Давай по новой.')
+            bot.register_next_step_handler(message, Get_location);
+            return
+
         location_long = message.location.longitude;
         location_lat = message.location.latitude;
 
@@ -100,7 +109,7 @@ def Get_location(message): #получаем координаты
 
         bot.register_next_step_handler(message, Get_event_date);  # следующий шаг – функция Get_event_date
     except Exception as e:
-        bot.reply_to(message, 'Что-то пошло не так.')
+        bot.reply_to(message, 'Что-то пошло не так. Придётся начинать сначала')
 
 def Get_event_date(message): #получаем дату
     try:
@@ -119,7 +128,7 @@ def Get_event_date(message): #получаем дату
         bot.send_message(message.from_user.id, "Укажи хэштэги")
         bot.register_next_step_handler(message, Get_tags);  # следующий шаг – функция Get_tags
     except Exception as e:
-        bot.reply_to(message, 'Что-то пошло не так.')
+        bot.reply_to(message, 'Что-то пошло не так. Придётся начинать сначала')
 
 def Get_tags(message): #получаем хэштэги
     try:
@@ -134,7 +143,7 @@ def Get_tags(message): #получаем хэштэги
         bot.send_message(message.from_user.id, "Укажи первую букву названия карты")
         bot.register_next_step_handler(message, Get_first_letter);  # следующий шаг – функция Get_first_letter
     except Exception as e:
-        bot.reply_to(message, 'Что-то пошло не так.')
+        bot.reply_to(message, 'Что-то пошло не так. Придётся начинать сначала')
 
 def Get_first_letter(message): #получаем первую букву названия карты
     try:
@@ -160,7 +169,7 @@ def Get_first_letter(message): #получаем первую букву наз�
         bot.register_next_step_handler(message, Save_data_to_db);  # следующий шаг – функция Save_data_to_db
 
     except Exception as e:
-        bot.reply_to(message, 'Что-то пошло не так.')
+        bot.reply_to(message, 'Что-то пошло не так. Придётся начинать сначала')
 
 def Save_data_to_db(message):
     try:
@@ -173,7 +182,7 @@ def Save_data_to_db(message):
         # map = map_dict[chat_id]
 
     except Exception as e:
-        bot.reply_to(message, 'Что-то пошло не так.')
+        bot.reply_to(message, 'Что-то пошло не так. Придётся начинать сначала')
 
 # Запускаем бота
 bot.polling(none_stop=True, interval=0)
