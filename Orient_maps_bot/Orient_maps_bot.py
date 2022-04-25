@@ -4,7 +4,7 @@ from datetime import date, timedelta
 
 
 # Создаем экземпляр бота
-bot = telebot.TeleBot('5351083383:AAEBXpxnEJO8-aACeNdndxlaVhz0xDxbxCg')
+bot = telebot.TeleBot(###)
 
 
 map_dict = {}
