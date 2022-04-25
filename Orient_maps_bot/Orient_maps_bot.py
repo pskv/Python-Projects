@@ -9,6 +9,7 @@ with open('telebot_token.txt') as f:
 bot = telebot.TeleBot(bot_token)
 
 
+
 map_dict = {}
 class Map:
     def __init__(self, name):
