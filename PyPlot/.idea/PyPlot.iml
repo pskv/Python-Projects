@@ -10,5 +10,6 @@
     <orderEntry type="module" module-name="Arcanoid" />
     <orderEntry type="module" module-name="WebServer" />
     <orderEntry type="module" module-name="Small_tasks_for_practice" />
+    <orderEntry type="module" module-name="Orient_maps_bot" />
   </component>
 </module>
