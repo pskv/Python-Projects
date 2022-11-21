@@ -18,11 +18,10 @@ def callback_worker(call):
                                                 reply_markup=omb_types.find_map_keyboard())
     elif call.data == "main_menu":
         omb_types.bot.edit_message_reply_markup(call.message.chat.id, call.message.message_id,
-                                                reply_markup=omb_types.welcome_keyboard
-                                                (call.message.chat.id == 366436625))
+                                                reply_markup=omb_types.welcome_keyboard(call.message.chat.id))
     elif call.data == "main_menu_from_maps":
         omb_types.bot.send_message(call.message.chat.id, 'Возвращаемся в главное меню',
-                                   reply_markup=omb_types.welcome_keyboard(call.message.chat.id == 366436625))
+                                   reply_markup=omb_types.welcome_keyboard(call.message.chat.id))
     elif call.data == "edit_map":
         omb_types.bot.edit_message_reply_markup(call.message.chat.id, call.message.message_id,
                                                 reply_markup=omb_types.map_edit_keyboard())
@@ -142,7 +141,7 @@ def callback_worker(call):
         omb_types.bot.send_message(call.message.chat.id, 'Информация о бумажной карте удалена. Можно её выкинуть.')
 
         omb_types.bot.send_message(call.message.chat.id, 'Возвращаемся в главное меню',
-                                   reply_markup=omb_types.welcome_keyboard(call.message.chat.id == 366436625))
+                                   reply_markup=omb_types.welcome_keyboard(call.message.chat.id))
     elif call.data == "delete_paper_map_no":
         user_id = call.message.chat.id
         omb_find_map.switch_map_init(user_id)
@@ -157,7 +156,7 @@ def callback_worker(call):
         omb_types.bot.send_message(call.message.chat.id, 'Карта удалена.')
 
         omb_types.bot.send_message(call.message.chat.id, 'Возвращаемся в главное меню',
-                                   reply_markup=omb_types.welcome_keyboard(call.message.chat.id == 366436625))
+                                   reply_markup=omb_types.welcome_keyboard(call.message.chat.id))
     elif call.data == "delete_completely_no":
         user_id = call.message.chat.id
         omb_find_map.switch_map_init(user_id)
@@ -185,7 +184,7 @@ def callback_worker(call):
 
 @omb_types.bot.message_handler(commands=["start"])
 def start(m):
-    omb_start.start(m, admin_mode=(m.chat.id == 366436625))
+    omb_start.start(m)
 
 
 @omb_types.bot.message_handler(commands=["description"])

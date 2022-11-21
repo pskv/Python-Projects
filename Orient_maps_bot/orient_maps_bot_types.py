@@ -1,5 +1,6 @@
 import telebot
 from telebot import types
+import orient_maps_bot_postgre as omb_postgre
 
 
 with open('Orient_maps_bot/telebot_token.txt') as f:
@@ -45,11 +46,12 @@ errors = {"omb-001": "Что-то пошло не так. Придётся на�
           }
 
 
-def welcome_keyboard(admin_mode=False):  # клавиатура главного меню
+def welcome_keyboard(user_id):  # клавиатура главного меню
     keyboard = types.InlineKeyboardMarkup()
     keyboard.add(types.InlineKeyboardButton(text='Загрузить карту🗄', callback_data='upload_map'))
-    keyboard.add(types.InlineKeyboardButton(text='Найти карту🔎', callback_data='find_map'))
-    if admin_mode:
+    if omb_postgre.check_maps_exist(user_id):
+        keyboard.add(types.InlineKeyboardButton(text='Найти карту🔎', callback_data='find_map'))
+    if user_id == 366436625:
         keyboard.add(types.InlineKeyboardButton(text='🕶Админка🕶', callback_data='admin_info'))
     return keyboard
 

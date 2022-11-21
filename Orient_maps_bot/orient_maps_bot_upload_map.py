@@ -23,7 +23,7 @@ def upload_map(message):  # получаем карту
             name = message.photo[len(message.photo) - 1].file_id
             telegram_file_id = message.photo[len(message.photo) - 1].file_id
         else:
-            omb_types.bot.reply_to(message, omb_types.errors["omb-001"] + '\n'
+            omb_types.bot.reply_to(message, omb_types.errors["omb-002"] + '\n'
                                    '*Приложи карту.*\n'
                                    'Для выхода в главное меню: /start',
                                    parse_mode='Markdown')

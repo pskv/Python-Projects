@@ -81,6 +81,22 @@ def save_map_to_db(omap):
     return cnt
 
 
+def check_maps_exist(user_id):
+    conn = psycopg2.connect(dbname=postgre_params['dbname'],
+                            user=postgre_params['user'],
+                            password=postgre_params['password'],
+                            host=postgre_params['host'])
+    with conn.cursor() as cursor:
+        cursor.execute("SELECT omap_id"
+                       "  FROM " + postgre_params['maps_table'] + " m"
+                       " WHERE owner = %s",
+                       (user_id,))
+        records = cursor.fetchone()
+        cursor.close()
+    conn.close()
+    return len(records)>0
+
+
 def get_all_maps(user_id):
     conn = psycopg2.connect(dbname=postgre_params['dbname'],
                             user=postgre_params['user'],
@@ -219,7 +235,7 @@ def get_maps_by_tags(user_id, tag):
                        "       unnest(string_to_array(tags, ' ')) as tag"
                        " WHERE owner = %s"
                        "   AND lower(tag) = %s"
-                       " ORDER BY omap_id",
+                       " ORDER BY event_date",
                        (user_id, tag))
         records = cursor.fetchall()
         cursor.close()
