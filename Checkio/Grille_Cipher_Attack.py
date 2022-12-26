@@ -10,24 +10,25 @@ def get_all_mirrors(n):
     return res
 
 
-def rotate_grille(gr, nr=0):
-    for n in range(nr % 4):
-        res = [['.' for _ in range(8)] for _ in range(8)]
-        for i in range(8):
-            for j in range(8):
-                res[i][j] = gr[7-j][i]
-        gr = list(map(lambda x: ''.join(x), res))
-    return gr
+def rotate_grille(grille, nr=0):
+    ratio = len(grille)
+    for n in range(nr % ratio):
+        res = [['.' for _ in range(ratio)] for _ in range(ratio)]
+        for i in range(ratio):
+            for j in range(ratio):
+                res[i][j] = grille[ratio-1-j][i]
+        grille = list(map(lambda x: ''.join(x), res))
+    return grille
 
 
-def apply_grille(src, gr):
+def apply_grille(plaintext: str, grille: List[str]):
     res = [['' for _ in range(8)] for _ in range(8)]
     pointer = 0
     for k in range(4):
         for i in range(8):
             for j in range(8):
-                if rotate_grille(gr, k)[i][j] == 'X':
-                    res[i][j] = src[pointer]
+                if rotate_grille(grille, k)[i][j] == 'X':
+                    res[i][j] = plaintext[pointer]
                     pointer += 1
     return ''.join(list(map(lambda x: ''.join(x), res)))
 
