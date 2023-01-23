@@ -1,8 +1,14 @@
-from itertools import accumulate
+from functools import reduce
 
 
 def power_supply(network, power_plants):
-    return set(list(accumulate([list(accumulate(range(cvrg), lambda x, y: set([i[j] for i in network if i[0] in x or i[1] in x for j in range(2)]), initial={loc}))[-1] for loc, cvrg in power_plants.items()], lambda x, y: x-y, initial=set([i[j] for i in network for j in range(2)])))[-1])
+    return set(reduce(lambda x, y: x-y,  # 2-nd reduce to minus cities covered by each plant from all set of cities
+                      [reduce(lambda x, y: set([i[j] for i in network if i[0] in x or i[1] in x for j in range(2)]),  # 1-st reduce to calculate coverage for each plant
+                              range(cvrg),
+                              {loc},
+                              ) for loc, cvrg in power_plants.items()],
+                      set([i[j] for i in network for j in range(2)])
+                      ))
 
 
 if __name__ == "__main__":
