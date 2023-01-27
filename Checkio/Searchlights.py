@@ -1,6 +1,14 @@
 from collections import namedtuple
 from math import sin, pi, sqrt, acos
 
+# The idea is to work with angles instead of coordinates of each point.
+# First check if polygon intersects with X axis.
+#       If intersects then find a width of this intersection determined by angle and remove particular points from analysis.
+# Repeat previos step with Y axis
+# Find width of intersection of polygon and circle.
+#      If intersects then count points with particular angles.
+#
+# P.S. All angles are in radians.
 
 def searchlights(polygons, lights):
     Shape = namedtuple('Shape', ['x', 'y', 'r', 'p_cnt'], defaults=[-1])
@@ -16,6 +24,7 @@ def searchlights(polygons, lights):
         if p.x - p.r < 0:  # check points with negative X coordinates
             angle = acos(p.x / p.r)
             angle = (angle - (pi/2), 2*pi-angle-(pi/2))
+            # remove them from analysis
             point_angles = set(
                 filter(lambda x: angle[0] <= x <= angle[1] or angle[0] <= x - 2*pi <= angle[1],
                        point_angles))
@@ -23,11 +32,12 @@ def searchlights(polygons, lights):
         if p.y - p.r < 0:  # check points with negative Y coordinates
             angle = acos(p.y / p.r)
             angle = (angle - pi, pi-angle)
+            # remove them from analysis
             point_angles = set(
                 filter(lambda x: angle[0] <= x <= angle[1] or angle[0] <= x - 2*pi <= angle[1],
                        point_angles))
 
-        visible_points = set()
+        visible_points = set()  # result set of points
 
         for light in lights:
             l = Shape(x=light[0], y=light[1], r=light[2])
