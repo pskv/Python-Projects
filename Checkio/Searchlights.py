@@ -1,5 +1,6 @@
 from collections import namedtuple
-from math import sin, pi, sqrt, acos
+from math import sin, pi, sqrt, acos, cos
+import time
 
 # The idea is to work with angles instead of coordinates of each point.
 # First check if polygon intersects with X axis.
@@ -10,32 +11,26 @@ from math import sin, pi, sqrt, acos
 #
 # P.S. All angles are in radians.
 
+
+Shape = namedtuple('Shape', ['x', 'y', 'r', 'p_cnt'], defaults=[-1])
+
 def searchlights(polygons, lights):
-    Shape = namedtuple('Shape', ['x', 'y', 'r', 'p_cnt'], defaults=[-1])
 
     res = 0
     for polygon in polygons:
 
-        r = round(polygon[2]/2/sin(pi/polygon[3]), 4)  # radius
+        r = round(polygon[2]/2/sin(pi/polygon[3]), 1)  # radius
         p = Shape(x=polygon[0], y=polygon[1]-r, r=r, p_cnt=polygon[3])
 
-        point_angles = set([i * (2 * pi / p.p_cnt) for i in range(p.p_cnt)])
+        point_angles = [i * (2 * pi / p.p_cnt) for i in range(p.p_cnt)]
 
         if p.x - p.r < 0:  # check points with negative X coordinates
-            angle = acos(p.x / p.r)
-            angle = (angle - (pi/2), 2*pi-angle-(pi/2))
             # remove them from analysis
-            point_angles = set(
-                filter(lambda x: angle[0] <= x <= angle[1] or angle[0] <= x - 2*pi <= angle[1],
-                       point_angles))
+            point_angles = filter(lambda x: sin(x)*p.r+p.x >= 0, point_angles)
 
         if p.y - p.r < 0:  # check points with negative Y coordinates
-            angle = acos(p.y / p.r)
-            angle = (angle - pi, pi-angle)
             # remove them from analysis
-            point_angles = set(
-                filter(lambda x: angle[0] <= x <= angle[1] or angle[0] <= x - 2*pi <= angle[1],
-                       point_angles))
+            point_angles = filter(lambda x: cos(x)*p.r+p.y >= 0, point_angles)
 
         visible_points = set()  # result set of points
 
@@ -45,7 +40,14 @@ def searchlights(polygons, lights):
 
             if d == 0:  # Centers are equal
                 if p.r <= l.r:
-                    visible_points |= point_angles
+                    visible_points |= set(point_angles)
+                continue
+            if d > p.r+l.r:  # No intersection
+                continue
+            if p.r > d+l.r:  # Circle is in the polygon. No intersection
+                continue
+            if l.r >= d + p.r:  # Polygon is in the circle
+                visible_points |= set(point_angles)
                 continue
             if d == p.r+l.r:  # One point intersection
                 if l.x > p.x:
@@ -53,15 +55,8 @@ def searchlights(polygons, lights):
                     continue
                 visible_points |= 2*pi - acos((l.y - p.y) / d)
                 continue
-            if d > p.r+l.r:  # No intersection
-                continue
-            if p.r > d+l.r:  # Circle is in the polygon. No intersection
-                continue
-            if l.r >= d + p.r:  # Polygon is in the circle
-                visible_points |= point_angles
-                continue
 
-            #  Two point intersection
+            #  Two points intersection
             angle = acos((d**2+p.r**2-l.r**2)/(2*d*p.r))
             if l.x >= p.x:
                 angle2 = acos((l.y-p.y)/d)
@@ -82,18 +77,27 @@ def searchlights(polygons, lights):
 
 
 if __name__ == "__main__":
+
+    start = time.time()
+
     # print("Example:")
 
     # print(searchlights([(4, 2, 2, 6)], [(4, 2, 3)]))
     # print(searchlights([(4, 3, 2, 8)], [(4, 2, 2)]))
     # print(searchlights([[1,5,2,4],[7,5,2,4],[4,6,2,4]],[[2,4,1],[3,4,1],[4,4,1],[5,4,1],[6,4,1]]))
     # print(searchlights([[2,5,3,3],[6,5,3,3]],[[3,4,2],[4,2,2]]))
-    print(searchlights([[2,2,2,7],[1,5,2,8]],[[1,2,2],[3,5,1],[2,3,2],[8,1,1],[4,3,2],[4,4,1]]))
+    # print(searchlights([[2,2,2,7],[1,5,2,8]],[[1,2,2],[3,5,1],[2,3,2],[8,1,1],[4,3,2],[4,4,1]]))
 
     # These "asserts" are used for self-checking and not for an auto-testing
-    assert (searchlights([(2, 3, 2, 3)], [(1, 2, 1)])) == 1, "regular triangle"
-    assert (searchlights([(4, 5, 2, 4)], [(4, 4, 3)])) == 4, "square"
-    assert (searchlights([(6, 7, 2, 5)], [(2, 3, 2)])) == 0, "regular pentagon"
-    assert (searchlights([(4, 2, 2, 6)], [(4, 2, 3)])) == 3, "regular hexagon"
-    assert (searchlights([(1, 7, 2, 8)], [(0, 5, 4)])) == 5, "regular octagon"
-    print("Coding complete? Click 'Check' to earn cool rewards!")
+    for _ in range(10000):
+        assert (searchlights([(2, 3, 2, 3)], [(1, 2, 1)])) == 1, "regular triangle"
+        assert (searchlights([(4, 5, 2, 4)], [(4, 4, 3)])) == 4, "square"
+        assert (searchlights([(6, 7, 2, 5)], [(2, 3, 2)])) == 0, "regular pentagon"
+        assert (searchlights([(4, 2, 2, 6)], [(4, 2, 3)])) == 3, "regular hexagon"
+        assert (searchlights([(1, 7, 2, 8)], [(0, 5, 4)])) == 5, "regular octagon"
+        # print("Coding complete? Click 'Check' to earn cool rewards!")
+
+
+
+    end = time.time()
+    print(end - start)
